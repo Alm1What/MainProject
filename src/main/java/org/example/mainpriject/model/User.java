@@ -2,6 +2,9 @@ package org.example.mainpriject.model;
 
 import jakarta.persistence.*;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "users")
 public class User {
@@ -19,17 +22,35 @@ public class User {
     @Column(nullable = false)
     private String name;
 
-    // Конструктори, геттери та сеттери
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "user_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
+    private Set<Role> roles = new HashSet<>();
 
     public User() {
-
     }
 
-    public User(Long id, String email, String password, String name) {
+    public User(Long id, String email, String password, String name, Set<Role> roles) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
+        this.roles = roles;
+    }
+
+    public Set<Role> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles) {
+        this.roles = roles;
+    }
+
+    public void addRole(Role role) {
+        this.roles.add(role);
     }
 
     public Long getId() {
@@ -64,4 +85,3 @@ public class User {
         this.name = name;
     }
 }
-

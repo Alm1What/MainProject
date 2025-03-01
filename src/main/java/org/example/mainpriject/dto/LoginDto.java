@@ -3,7 +3,6 @@ package org.example.mainpriject.dto;
 public class LoginDto {
     private String email;
     private String password;
-    // Геттери та сеттери
 
     public LoginDto(String email, String password) {
         this.email = email;

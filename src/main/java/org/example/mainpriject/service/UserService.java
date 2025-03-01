@@ -1,9 +1,14 @@
 package org.example.mainpriject.service;
 
+import jakarta.annotation.PostConstruct;
 import org.example.mainpriject.dto.UserDto;
+import org.example.mainpriject.model.Role;
 import org.example.mainpriject.model.User;
+import org.example.mainpriject.repository.RoleRepository;
 import org.example.mainpriject.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -15,7 +20,24 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
+    private RoleRepository roleRepository;
+
+    @Autowired
     private PasswordEncoder passwordEncoder;
+
+    @PostConstruct
+    public void init() {
+        // Створюємо ролі, якщо їх не існує
+        createRoleIfNotFound("ROLE_USER");
+        createRoleIfNotFound("ROLE_ADMIN");
+    }
+
+    private void createRoleIfNotFound(String name) {
+        if (!roleRepository.findByName(name).isPresent()) {
+            Role role = new Role(name);
+            roleRepository.save(role);
+        }
+    }
 
     public User register(UserDto userDto) {
         // Перевірка наявності користувача за email може бути додана
@@ -24,6 +46,23 @@ public class UserService {
         // Шифруємо пароль (BCryptPasswordEncoder)
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setName(userDto.getName());
+
+        // Додаємо роль користувача за замовчуванням
+        Role userRole = roleRepository.findByName("ROLE_USER")
+                .orElseThrow(() -> new RuntimeException("Role not found"));
+        user.addRole(userRole);
+
+        return userRepository.save(user);
+    }
+
+    public User setAdminRole(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        Role adminRole = roleRepository.findByName("ROLE_ADMIN")
+                .orElseThrow(() -> new RuntimeException("Admin role not found"));
+
+        user.addRole(adminRole);
         return userRepository.save(user);
     }
 
@@ -32,5 +71,11 @@ public class UserService {
         return userRepository.findByEmail(email)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found"));
     }
-}
 
+    // Метод для отримання поточного автентифікованого користувача
+    public User getCurrentUser() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
+        return loadUserByEmail(email);
+    }
+}
