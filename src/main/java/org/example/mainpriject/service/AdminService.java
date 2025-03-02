@@ -14,13 +14,11 @@ public class AdminService {
 
     private final UserService userService;
     private final UserRepository userRepository;
-    private final TaskService taskService;
     private final TaskRepository taskRepository;
 
-    public AdminService(UserService userService, UserRepository userRepository, TaskService taskService, TaskRepository taskRepository) {
+    public AdminService(UserService userService, UserRepository userRepository, TaskRepository taskRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
-        this.taskService = taskService;
         this.taskRepository = taskRepository;
     }
 
@@ -77,6 +75,9 @@ public class AdminService {
         if (isAdmin) {
             throw new RuntimeException("Не можна видалити іншого адміністратора");
         }
+
+        userToDelete.getRoles().clear();
+        userRepository.save(userToDelete);
 
         // Видаляємо всі завдання користувача, якщо вони є
         if (!taskRepository.findByOwner(userToDelete).isEmpty()) {
