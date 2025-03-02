@@ -1,7 +1,9 @@
 package org.example.mainpriject.controller;
 
+import org.example.mainpriject.model.Role;
 import org.example.mainpriject.model.User;
 import org.example.mainpriject.repository.UserRepository;
+import org.example.mainpriject.service.AdminService;
 import org.example.mainpriject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +18,9 @@ public class AdminController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private AdminService adminService;
 
     private final UserRepository userRepository;
 
@@ -37,15 +42,10 @@ public class AdminController {
         return ResponseEntity.ok(userRepository.findAll());
     }
 
-    // створити окермий сервіс щоб видаляти користувачів
+
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteUser(@PathVariable Long id) {
-        if (userRepository.existsById(id)) {
-            userRepository.deleteById(id);
-            return ResponseEntity.ok("User deleted");
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public void deleteUser(@PathVariable Long id) {
+        adminService.deleteUser(id);
     }
 
 }

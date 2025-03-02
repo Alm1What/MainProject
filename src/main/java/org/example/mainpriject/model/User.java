@@ -2,6 +2,7 @@ package org.example.mainpriject.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -30,15 +31,42 @@ public class User {
     )
     private Set<Role> roles = new HashSet<>();
 
+
+    @Column(nullable = false)
+    private boolean deleted = false;
+
+    @Column(name = "deleted_at")
+    private LocalDateTime deletedAt;
+
+    // Додаю "мяке видалення не забути про зміну реалізації" якщо deleted = true то користувач видалений)
+
     public User() {
     }
 
-    public User(Long id, String email, String password, String name, Set<Role> roles) {
+    public User(Long id, String email, String password, String name, Set<Role> roles, boolean deleted, LocalDateTime deletedAt) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
         this.roles = roles;
+        this.deleted = deleted;
+        this.deletedAt = deletedAt;
+    }
+
+    public boolean isDeleted() {
+        return deleted;
+    }
+
+    public void setDeleted(boolean deleted) {
+        this.deleted = deleted;
+    }
+
+    public LocalDateTime getDeletedAt() {
+        return deletedAt;
+    }
+
+    public void setDeletedAt(LocalDateTime deletedAt) {
+        this.deletedAt = deletedAt;
     }
 
     public Set<Role> getRoles() {
