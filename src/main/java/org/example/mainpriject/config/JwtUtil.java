@@ -15,10 +15,8 @@ public class JwtUtil {
     // Генеруємо безпечний секретний ключ (512 біт)
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
-    // Термін дії токену, наприклад 24 години
     private final long jwtExpirationMs = 86400000;
 
-    // Генерація JWT токену
     public String generateToken(Authentication authentication) {
         UserDetails userPrincipal = (UserDetails) authentication.getPrincipal();
 
@@ -40,13 +38,12 @@ public class JwtUtil {
                 .getSubject();
     }
 
-    // Валідація токену
     public boolean validateJwtToken(String token) {
         try {
             Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
             return true;
         } catch (JwtException e) {
-            // Тут можна залогувати помилку, якщо потрібно
+            // додати обробку проблеми
         }
         return false;
     }

@@ -4,8 +4,6 @@ public class UserDto {
     private String email;
     private String password;
     private String name;
-    // Геттери та сеттери
-
 
     public UserDto(String email, String password, String name) {
         this.email = email;

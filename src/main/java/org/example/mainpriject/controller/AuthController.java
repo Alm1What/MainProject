@@ -29,14 +29,12 @@ public class AuthController {
     @Autowired
     private JwtUtil jwtUtil;
 
-    // Реєстрація користувача
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody UserDto userDto) {
         userService.register(userDto);
         return ResponseEntity.ok("User registered successfully");
     }
 
-    // Логін користувача: повертає JWT токен
     @PostMapping("/login")
     public ResponseEntity<JwtResponse> loginUser(@RequestBody LoginDto loginDto) {
         // Аутентифікація користувача

@@ -25,7 +25,6 @@ public class TaskService {
     @Autowired
     private UserService userService;
 
-    // Створення нового завдання для поточного користувача
     public Task createTask(CreateTaskDto createTaskDto) {
         User currentUser = userService.getCurrentUser();
 
@@ -38,13 +37,11 @@ public class TaskService {
         return taskRepository.save(task);
     }
 
-    // Отримання всіх завдань поточного користувача
     public List<Task> getUserTasks() {
         User currentUser = userService.getCurrentUser();
         return taskRepository.findByOwner(currentUser);
     }
 
-    // Отримання завдання за id (перевірка власника або адміністратора)
     public Task getTaskById(Long id) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Task not found"));
@@ -62,9 +59,8 @@ public class TaskService {
         }
     }
 
-    // Оновлення завдання
     public Task updateTask(Long id, CreateTaskDto taskDto) {
-        Task existingTask = getTaskById(id); // Це перевірить доступ
+        Task existingTask = getTaskById(id);
 
         existingTask.setTitle(taskDto.getTitle());
         existingTask.setDescription(taskDto.getDescription());
@@ -83,9 +79,8 @@ public class TaskService {
         return taskRepository.save(existingTask);
     }
 
-    // Видалення завдання
     public void deleteTask(Long id) {
-        Task task = getTaskById(id); // Це перевірить доступ
+        Task task = getTaskById(id);
         taskRepository.delete(task);
     }
 
