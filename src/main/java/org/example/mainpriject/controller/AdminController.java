@@ -48,4 +48,10 @@ public class AdminController {
         adminService.deleteUser(id);
     }
 
+    @PatchMapping("/users/{id}/restore")
+    public ResponseEntity<User> restoreUser(@PathVariable Long id) {
+        adminService.restoreUser(id);
+        return ResponseEntity.ok().build();
+    }
+
 }

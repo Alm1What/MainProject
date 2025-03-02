@@ -40,10 +40,13 @@ public class User {
 
     // Додаю "мяке видалення не забути про зміну реалізації" якщо deleted = true то користувач видалений)
 
+    @Column(name = "restoration_at")
+    private LocalDateTime restorationAt;
+
     public User() {
     }
 
-    public User(Long id, String email, String password, String name, Set<Role> roles, boolean deleted, LocalDateTime deletedAt) {
+    public User(Long id, String email, String password, String name, Set<Role> roles, boolean deleted, LocalDateTime deletedAt, LocalDateTime restorationAt) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -51,6 +54,15 @@ public class User {
         this.roles = roles;
         this.deleted = deleted;
         this.deletedAt = deletedAt;
+        this.restorationAt = restorationAt;
+    }
+
+    public LocalDateTime getRestorationAt() {
+        return restorationAt;
+    }
+
+    public void setRestorationAt(LocalDateTime restorationAt) {
+        this.restorationAt = restorationAt;
     }
 
     public boolean isDeleted() {

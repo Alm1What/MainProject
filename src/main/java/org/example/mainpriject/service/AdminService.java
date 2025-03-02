@@ -43,4 +43,12 @@ public class AdminService {
         userRepository.save(userToDelete);
     }
 
+    public void restoreUser(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setDeleted(false);
+        user.setRestorationAt(LocalDateTime.now());
+        userRepository.save(user);
+    }
+
 }
