@@ -43,15 +43,25 @@ public class AdminController {
     }
 
 
+    // це не повне видалення користувача а лише зміна deleted на true (хочу спробувати реалізувати функціонал для цього "Мяке видалення").
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteUser(@PathVariable Long id) {
         adminService.deleteUser(id);
     }
 
     @PatchMapping("/users/{id}/restore")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<User> restoreUser(@PathVariable Long id) {
         adminService.restoreUser(id);
         return ResponseEntity.ok().build();
+    }
+
+    // Повне видалення користувача
+    @DeleteMapping("/total-remove/user/{id}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public void totalRemoveUser(@PathVariable Long id) {
+        adminService.completeRemoval(id);
     }
 
 }

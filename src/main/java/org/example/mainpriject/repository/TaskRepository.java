@@ -15,4 +15,5 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     List<Task> findByOwnerEmail(String email);
     Page<Task> findByOwner(User owner, Pageable pageable);
     Page<Task> findAll(Pageable pageable);
+    void deleteByOwner(User owner);
 }
