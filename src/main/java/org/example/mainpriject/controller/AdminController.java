@@ -1,6 +1,6 @@
 package org.example.mainpriject.controller;
 
-import org.example.mainpriject.model.Role;
+import org.example.mainpriject.dto.UserDto;
 import org.example.mainpriject.model.User;
 import org.example.mainpriject.repository.UserRepository;
 import org.example.mainpriject.service.AdminService;
@@ -62,6 +62,15 @@ public class AdminController {
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void totalRemoveUser(@PathVariable Long id) {
         adminService.completeRemoval(id);
+    }
+
+    @PutMapping("/{userId}")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<UserDto> updateUserProfile(
+            @PathVariable Long userId,
+            @RequestBody UserDto updatedUserDto) {
+        UserDto updatedUser = userService.updateUserProfile(userId, updatedUserDto);
+        return ResponseEntity.ok(updatedUser);
     }
 
 }
