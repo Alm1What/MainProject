@@ -1,5 +1,6 @@
 package org.example.mainpriject.service;
 
+import jakarta.persistence.EntityNotFoundException;
 import org.example.mainpriject.dto.CreateTaskDto;
 import org.example.mainpriject.model.Task;
 import org.example.mainpriject.model.User;
@@ -9,9 +10,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -59,9 +63,20 @@ public class TaskService {
         }
     }
 
-    public Task updateTask(Long id, CreateTaskDto taskDto) {
-        Task existingTask = getTaskById(id);
+    @Transactional
+    public Task updateTask(Long taskId, CreateTaskDto taskDto) {
+        User user = userService.getCurrentUser();
 
+        // Отримуємо задачу або кидаємо помилку, якщо не знайдено
+        Task existingTask = taskRepository.findById(taskId)
+                .orElseThrow(() -> new EntityNotFoundException("Task not found"));
+
+        // Перевіряємо, чи це власник задачі
+        if (!existingTask.getOwner().getId().equals(user.getId())) {
+            throw new AccessDeniedException("You don't have permission to update this task");
+        }
+
+        // Оновлюємо поля задачі
         existingTask.setTitle(taskDto.getTitle());
         existingTask.setDescription(taskDto.getDescription());
         existingTask.setUpdatedAt(LocalDateTime.now());
