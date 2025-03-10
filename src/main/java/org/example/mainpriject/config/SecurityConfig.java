@@ -33,10 +33,12 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/api/auth/**").permitAll()
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                                .requestMatchers("/api/tasks/**").authenticated()
+                                .requestMatchers("/api/user/**").authenticated()
                                 .anyRequest().authenticated()
                 );
 
-        // Додаємо наш JWT-фільтр перед стандартним фільтром аутентифікації
+
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
