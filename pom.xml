@@ -29,21 +29,17 @@
     <properties>
         <java.version>21</java.version>
     </properties>
-
-
     <dependencies>
-
-
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>postgresql</artifactId>
-            <version>1.19.3</version> <!-- Використовуйте ту саму версію, що й для інших модулів Testcontainers -->
+            <version>1.19.3</version>
             <scope>test</scope>
         </dependency>
         <dependency>
             <groupId>org.testcontainers</groupId>
             <artifactId>testcontainers</artifactId>
-            <version>1.19.3</version> <!-- Перевірте останню версію на https://testcontainers.org/ -->
+            <version>1.19.3</version>
             <scope>test</scope>
         </dependency>
 
@@ -69,7 +65,7 @@
             <version>1.5.5.Final</version>
         </dependency>
 
-        <!-- JJWT (JSON Web Token) -->
+
         <dependency>
             <groupId>io.jsonwebtoken</groupId>
             <artifactId>jjwt-api</artifactId>

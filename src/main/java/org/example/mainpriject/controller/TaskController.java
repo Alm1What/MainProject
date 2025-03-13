@@ -20,14 +20,12 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-    // Створення нового завдання
     @PostMapping
     public ResponseEntity<TaskDto> createTask(@Validated @RequestBody CreateTaskDto createTaskDto) {
         Task task = taskService.createTask(createTaskDto);
         return ResponseEntity.ok(new TaskDto(task));
     }
 
-    // Отримання всіх завдань поточного користувача
     @GetMapping("/my")
     public ResponseEntity<List<TaskDto>> getMyTasks() {
         List<Task> tasks = taskService.getUserTasks();
@@ -43,21 +41,20 @@ public class TaskController {
         return ResponseEntity.ok(new TaskDto(task));
     }
 
-    // Оновлення завдання
+
     @PutMapping("/{id}")
     public ResponseEntity<TaskDto> updateTask(@PathVariable Long id, @RequestBody CreateTaskDto taskDto) {
         Task task = taskService.updateTask(id, taskDto);
         return ResponseEntity.ok(new TaskDto(task));
     }
 
-    // Зміна статусу завдання
     @PatchMapping("/{id}/toggle-completion")
     public ResponseEntity<TaskDto> toggleTaskCompletion(@PathVariable Long id) {
         Task task = taskService.toggleTaskCompletion(id);
         return ResponseEntity.ok(new TaskDto(task));
     }
 
-    // Видалення завдання
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
         taskService.deleteTask(id);
