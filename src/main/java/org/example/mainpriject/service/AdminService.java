@@ -1,5 +1,8 @@
 package org.example.mainpriject.service;
 
+import org.example.mainpriject.exception.AccessDeniedException;
+import org.example.mainpriject.exception.ResourceNotFoundException;
+import org.example.mainpriject.exception.ValidationException;
 import org.example.mainpriject.model.User;
 import org.example.mainpriject.repository.TaskRepository;
 import org.example.mainpriject.repository.UserRepository;
@@ -24,21 +27,20 @@ public class AdminService {
 
 
     public void deleteUser(Long userId) {
-
         User currentAdmin = userService.getCurrentUser();
 
         if (currentAdmin.getId().equals(userId)) {
-            throw new RuntimeException("Адміністратор не може видалити себе");
+            throw new ValidationException("Адміністратор не може видалити себе");
         }
 
         User userToDelete = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+                .orElseThrow(() -> new ResourceNotFoundException("Користувача не знайдено"));
 
         boolean isAdmin = userToDelete.getRoles().stream()
                 .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
 
         if (isAdmin) {
-            throw new RuntimeException("Не можна видалити іншого адміністратора");
+            throw new AccessDeniedException("Не можна видалити іншого адміністратора");
         }
 
         userToDelete.setDeleted(true);
@@ -49,37 +51,33 @@ public class AdminService {
 
     public void restoreUser(Long userId) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Користувача не знайдено"));
         user.setDeleted(false);
         user.setRestorationAt(LocalDateTime.now());
         userRepository.save(user);
     }
 
-
     @Transactional
     public void completeRemoval(Long userId) {
-
-        // Продублював код з 30 рядка, винести як окрему функцію
         User currentAdmin = userService.getCurrentUser();
 
         if (currentAdmin.getId().equals(userId)) {
-            throw new RuntimeException("Адміністратор не може видалити себе");
+            throw new ValidationException("Адміністратор не може видалити себе");
         }
 
         User userToDelete = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("Користувача не знайдено"));
+                .orElseThrow(() -> new ResourceNotFoundException("Користувача не знайдено"));
 
         boolean isAdmin = userToDelete.getRoles().stream()
                 .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
 
         if (isAdmin) {
-            throw new RuntimeException("Не можна видалити іншого адміністратора");
+            throw new AccessDeniedException("Не можна видалити іншого адміністратора");
         }
 
         userToDelete.getRoles().clear();
         userRepository.save(userToDelete);
 
-        // Видаляємо всі завдання користувача, якщо вони є
         if (!taskRepository.findByOwner(userToDelete).isEmpty()) {
             taskRepository.deleteByOwner(userToDelete);
         }

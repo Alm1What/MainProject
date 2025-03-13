@@ -2,6 +2,7 @@ package org.example.mainpriject.service;
 
 import jakarta.persistence.EntityNotFoundException;
 import org.example.mainpriject.dto.CreateTaskDto;
+import org.example.mainpriject.exception.ResourceNotFoundException;
 import org.example.mainpriject.model.Task;
 import org.example.mainpriject.model.User;
 import org.example.mainpriject.repository.TaskRepository;
@@ -29,6 +30,15 @@ public class TaskService {
     @Autowired
     private UserService userService;
 
+    public Task toggleTaskCompletion(Long id) {
+        Task existingTask = getTaskById(id); // Це перевірить доступ
+
+        existingTask.setCompleted(!existingTask.isCompleted());
+        existingTask.setUpdatedAt(LocalDateTime.now());
+
+        return taskRepository.save(existingTask);
+    }
+
     public Task createTask(CreateTaskDto createTaskDto) {
         User currentUser = userService.getCurrentUser();
 
@@ -48,47 +58,33 @@ public class TaskService {
 
     public Task getTaskById(Long id) {
         Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Завдання не знайдено"));
 
         User currentUser = userService.getCurrentUser();
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-        // Перевіряємо, чи поточний користувач є власником завдання або адміністратором
-        if (task.getOwner().getId().equals(currentUser.getId()) ||
-                authentication.getAuthorities().stream()
+        if (!task.getOwner().getId().equals(currentUser.getId()) &&
+                !authentication.getAuthorities().stream()
                         .anyMatch(a -> a.getAuthority().equals("ROLE_ADMIN"))) {
-            return task;
-        } else {
-            throw new RuntimeException("Access denied");
+            throw new AccessDeniedException("Доступ заборонено");
         }
+
+        return task;
     }
 
     @Transactional
     public Task updateTask(Long taskId, CreateTaskDto taskDto) {
         User user = userService.getCurrentUser();
 
-        // Отримуємо задачу або кидаємо помилку, якщо не знайдено
         Task existingTask = taskRepository.findById(taskId)
-                .orElseThrow(() -> new EntityNotFoundException("Task not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Завдання не знайдено"));
 
-        // Перевіряємо, чи це власник задачі
         if (!existingTask.getOwner().getId().equals(user.getId())) {
-            throw new AccessDeniedException("You don't have permission to update this task");
+            throw new AccessDeniedException("Ви не маєте прав для оновлення цього завдання");
         }
 
-        // Оновлюємо поля задачі
         existingTask.setTitle(taskDto.getTitle());
         existingTask.setDescription(taskDto.getDescription());
-        existingTask.setUpdatedAt(LocalDateTime.now());
-
-        return taskRepository.save(existingTask);
-    }
-
-    // Зміна статусу завдання (виконано/не виконано)
-    public Task toggleTaskCompletion(Long id) {
-        Task existingTask = getTaskById(id); // Це перевірить доступ
-
-        existingTask.setCompleted(!existingTask.isCompleted());
         existingTask.setUpdatedAt(LocalDateTime.now());
 
         return taskRepository.save(existingTask);
@@ -99,7 +95,6 @@ public class TaskService {
         taskRepository.delete(task);
     }
 
-    // Отримання всіх завдань (тільки для адміністратора)
     public List<Task> getAllTasks(int page, int size) {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
@@ -109,7 +104,7 @@ public class TaskService {
             Page<Task> taskPage = taskRepository.findAll(pageable);
             return taskPage.getContent();
         } else {
-            throw new RuntimeException("Access denied. Admin role required.");
+            throw new AccessDeniedException("Доступ заборонено. Потрібна роль адміністратора.");
         }
     }
 }

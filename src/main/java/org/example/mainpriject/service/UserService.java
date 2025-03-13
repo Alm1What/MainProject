@@ -2,6 +2,8 @@ package org.example.mainpriject.service;
 
 import jakarta.annotation.PostConstruct;
 import org.example.mainpriject.dto.UserDto;
+import org.example.mainpriject.exception.ResourceNotFoundException;
+import org.example.mainpriject.exception.ValidationException;
 import org.example.mainpriject.mapper.UserMapper;
 import org.example.mainpriject.model.Role;
 import org.example.mainpriject.model.User;
@@ -48,13 +50,11 @@ public class UserService {
         // Перевірка наявності користувача за email може бути додана
         User user = new User();
         user.setEmail(userDto.getEmail());
-        // Шифруємо пароль (BCryptPasswordEncoder)
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
         user.setName(userDto.getName());
 
-        // Додаємо роль користувача за замовчуванням
         Role userRole = roleRepository.findByName("ROLE_USER")
-                .orElseThrow(() -> new RuntimeException("Role not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Роль не знайдено"));
         user.addRole(userRole);
 
         return userRepository.save(user);
@@ -62,19 +62,43 @@ public class UserService {
 
     public User setAdminRole(String email) {
         User user = userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Користувача не знайдено"));
 
         Role adminRole = roleRepository.findByName("ROLE_ADMIN")
-                .orElseThrow(() -> new RuntimeException("Admin role not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Роль адміністратора не знайдено"));
 
         user.addRole(adminRole);
         return userRepository.save(user);
     }
 
-    // Метод для завантаження користувача (наприклад, для аутентифікації)
     public User loadUserByEmail(String email) {
         return userRepository.findByEmail(email)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+                .orElseThrow(() -> new ResourceNotFoundException("Користувача не знайдено"));
+    }
+
+    @Transactional
+    public UserDto updateUserProfile(Long userId, UserDto updatedUserDto) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Користувача не знайдено"));
+
+        userMapper.updateUserFromDto(updatedUserDto, existingUser);
+        User savedUser = userRepository.save(existingUser);
+
+        return userMapper.toDto(savedUser);
+    }
+
+    @Transactional
+    public boolean changePassword(Long userId, String currentPassword, String newPassword) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new ResourceNotFoundException("Користувача не знайдено"));
+
+        if (passwordEncoder.matches(currentPassword, user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(newPassword));
+            userRepository.save(user);
+            return true;
+        }
+
+        throw new ValidationException("Поточний пароль неправильний");
     }
 
     // Метод для отримання поточного автентифікованого користувача
@@ -83,41 +107,6 @@ public class UserService {
         String email = authentication.getName();
         return loadUserByEmail(email);
     }
-
-    // Новий метод з використанням MapStruct для оновлення профілю користувача
-    @Transactional
-    public UserDto updateUserProfile(Long userId, UserDto updatedUserDto) {
-        // Знаходимо користувача за ID
-        User existingUser = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User with ID " + userId + " not found"));
-
-        // Використовуємо MapStruct для оновлення користувача
-        userMapper.updateUserFromDto(updatedUserDto, existingUser);
-
-        // Зберігаємо оновленого користувача
-        User savedUser = userRepository.save(existingUser);
-
-        // Конвертуємо назад у DTO для повернення клієнту
-        return userMapper.toDto(savedUser);
-    }
-
-    // Додатковий метод для зміни пароля (з перевіркою старого пароля)
-    @Transactional
-    public boolean changePassword(Long userId, String currentPassword, String newPassword) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
-
-        // Перевіряємо, чи правильний поточний пароль
-        if (passwordEncoder.matches(currentPassword, user.getPassword())) {
-            // Шифруємо і встановлюємо новий пароль
-            user.setPassword(passwordEncoder.encode(newPassword));
-            userRepository.save(user);
-            return true;
-        }
-
-        return false; // Повертаємо false, якщо поточний пароль неправильний
-    }
-
     public UserDto getCurrentUserDto() {
         User currentUser = getCurrentUser();
         return userMapper.toDto(currentUser);

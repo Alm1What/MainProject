@@ -6,6 +6,7 @@ import org.example.mainpriject.model.Task;
 import org.example.mainpriject.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -13,6 +14,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tasks")
+@Validated
 public class TaskController {
 
     @Autowired
@@ -20,7 +22,7 @@ public class TaskController {
 
     // Створення нового завдання
     @PostMapping
-    public ResponseEntity<TaskDto> createTask(@RequestBody CreateTaskDto createTaskDto) {
+    public ResponseEntity<TaskDto> createTask(@Validated @RequestBody CreateTaskDto createTaskDto) {
         Task task = taskService.createTask(createTaskDto);
         return ResponseEntity.ok(new TaskDto(task));
     }
@@ -35,7 +37,6 @@ public class TaskController {
         return ResponseEntity.ok(taskDtos);
     }
 
-    // Отримання завдання за id
     @GetMapping("/{id}")
     public ResponseEntity<TaskDto> getTaskById(@PathVariable Long id) {
         Task task = taskService.getTaskById(id);
