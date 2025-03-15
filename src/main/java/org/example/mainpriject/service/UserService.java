@@ -32,20 +32,6 @@ public class UserService {
     @Autowired
     private UserMapper userMapper; // Додаємо mapper
 
-    @PostConstruct
-    public void init() {
-        // Створюємо ролі, якщо їх не існує
-        createRoleIfNotFound("ROLE_USER");
-        createRoleIfNotFound("ROLE_ADMIN");
-    }
-
-    private void createRoleIfNotFound(String name) {
-        if (!roleRepository.findByName(name).isPresent()) {
-            Role role = new Role(name);
-            roleRepository.save(role);
-        }
-    }
-
     public User register(UserDto userDto) {
         // Перевірка наявності користувача за email може бути додана
         User user = new User();
