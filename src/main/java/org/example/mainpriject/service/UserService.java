@@ -33,11 +33,8 @@ public class UserService {
     private UserMapper userMapper; // Додаємо mapper
 
     public User register(UserDto userDto) {
-        // Перевірка наявності користувача за email може бути додана
-        User user = new User();
-        user.setEmail(userDto.getEmail());
+        User user = userMapper.toUser(userDto);
         user.setPassword(passwordEncoder.encode(userDto.getPassword()));
-        user.setName(userDto.getName());
 
         Role userRole = roleRepository.findByName("ROLE_USER")
                 .orElseThrow(() -> new ResourceNotFoundException("Роль не знайдено"));

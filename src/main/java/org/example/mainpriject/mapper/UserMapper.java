@@ -28,4 +28,11 @@ public interface UserMapper {
     @Mapping(target = "restorationAt", ignore = true)
     @Mapping(target = "password", ignore = true) // Не змінюємо пароль під час оновлення профілю
     void updateUserFromDto(UserDto userDto, @MappingTarget User user);
+
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "deleted", ignore = true)
+    @Mapping(target = "deletedAt", ignore = true)
+    @Mapping(target = "restorationAt", ignore = true)
+    User toUser(UserDto userDto);
 }
