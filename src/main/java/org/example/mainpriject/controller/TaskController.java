@@ -5,8 +5,9 @@ import org.example.mainpriject.dto.TaskDto;
 import org.example.mainpriject.model.Task;
 import org.example.mainpriject.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,14 +15,14 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/tasks")
-@Validated
 public class TaskController {
 
     @Autowired
     private TaskService taskService;
 
     @PostMapping
-    public ResponseEntity<TaskDto> createTask(@Validated @RequestBody CreateTaskDto createTaskDto) {
+    @ResponseStatus(HttpStatus.I_AM_A_TEAPOT)
+    public ResponseEntity<TaskDto> createTask(@RequestBody CreateTaskDto createTaskDto) {
         Task task = taskService.createTask(createTaskDto);
         return ResponseEntity.ok(new TaskDto(task));
     }

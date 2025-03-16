@@ -2,10 +2,7 @@ FROM eclipse-temurin:21-jdk
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y maven
-
-COPY . .
-
-RUN mvn clean package -DskipTests
-
-ENTRYPOINT ["java", "-jar", "target/MainPriject-0.0.1-SNAPSHOT.jar"]
+COPY target/MainPriject-0.0.1-SNAPSHOT.jar app.jar
+# Сюди можна відразу додати команду для переканфігуряції MainPriject-0.0.1-SNAPSHOT.jar
+# і просто командою докер up все буде працювати самостійно
+ENTRYPOINT ["java", "-jar", "app.jar"]
