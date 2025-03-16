@@ -30,14 +30,15 @@ public class UserController {
             @PathVariable Long userId,
             @RequestBody PasswordChangeDto passwordChangeDto) {
 
-        User user = userService.getCurrentUser();
-        boolean isAdmin = user.getRoles().stream().anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
+        User currentUser = userService.getCurrentUser();
+        boolean isAdmin = currentUser.getRoles().stream()
+                .anyMatch(role -> role.getName().equals("ROLE_ADMIN"));
 
-        if (isAdmin || user.getId().equals(userId)) {
-            userService.changePassword(userId, passwordChangeDto.getCurrentPassword(), passwordChangeDto.getNewPassword());
-            return ResponseEntity.ok().body(Map.of("message", "Password changed successfully"));
-        } else {
+        if (!isAdmin && !currentUser.getId().equals(userId)) {
             throw new AccessDeniedException("Неможливо змінити пароль з наданими даними");
         }
+
+        userService.changePassword(userId, passwordChangeDto);
+        return ResponseEntity.ok(Map.of("message", "Пароль успішно змінено"));
     }
 }

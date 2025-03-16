@@ -1,6 +1,7 @@
 package org.example.mainpriject.service;
 
 import jakarta.annotation.PostConstruct;
+import org.example.mainpriject.dto.PasswordChangeDto;
 import org.example.mainpriject.dto.UserDto;
 import org.example.mainpriject.exception.ResourceNotFoundException;
 import org.example.mainpriject.exception.ValidationException;
@@ -71,13 +72,28 @@ public class UserService {
     }
 
     @Transactional
-    public boolean changePassword(Long userId, String currentPassword, String newPassword) {
+    public boolean changePassword(Long userId, PasswordChangeDto passwordChangeDto) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new ResourceNotFoundException("Користувача не знайдено"));
+
+        String currentPassword = new String(passwordChangeDto.getCurrentPassword());
+        String newPassword = new String(passwordChangeDto.getNewPassword());
+
+        if (currentPassword.isBlank() || newPassword.isBlank()) {
+            throw new ValidationException("Пароль не може бути порожнім");
+        }
+
+        if (currentPassword.equals(newPassword)) {
+            throw new ValidationException("Новий пароль не може бути таким самим, як старий");
+        }
 
         if (passwordEncoder.matches(currentPassword, user.getPassword())) {
             user.setPassword(passwordEncoder.encode(newPassword));
             userRepository.save(user);
+
+            // Очищення паролів для безпеки
+            passwordChangeDto.clearPasswords();
+
             return true;
         }
 

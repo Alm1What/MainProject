@@ -1,33 +1,37 @@
 package org.example.mainpriject.dto;
 
-public class PasswordChangeDto {
-    private String currentPassword;
-    private String newPassword;
+import java.util.Arrays;
 
+public class PasswordChangeDto {
+    private char[] currentPassword;
+    private char[] newPassword;
 
     public PasswordChangeDto() {
     }
 
-
-    public PasswordChangeDto(String currentPassword, String newPassword) {
+    public PasswordChangeDto(char[] currentPassword, char[] newPassword) {
         this.currentPassword = currentPassword;
         this.newPassword = newPassword;
     }
 
-
-    public String getCurrentPassword() {
+    public char[] getCurrentPassword() {
         return currentPassword;
     }
 
-    public void setCurrentPassword(String currentPassword) {
+    public void setCurrentPassword(char[] currentPassword) {
         this.currentPassword = currentPassword;
     }
 
-    public String getNewPassword() {
+    public char[] getNewPassword() {
         return newPassword;
     }
 
-    public void setNewPassword(String newPassword) {
+    public void setNewPassword(char[] newPassword) {
         this.newPassword = newPassword;
+    }
+
+    public void clearPasswords() {
+        Arrays.fill(currentPassword, '\0');
+        Arrays.fill(newPassword, '\0');
     }
 }
