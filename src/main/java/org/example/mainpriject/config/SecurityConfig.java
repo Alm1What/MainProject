@@ -35,6 +35,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
                                 .requestMatchers("/api/tasks/**").authenticated()
                                 .requestMatchers("/api/user/**").authenticated()
+                                .requestMatchers("/api/chat/**").authenticated()
                                 .anyRequest().authenticated()
                 );
 
