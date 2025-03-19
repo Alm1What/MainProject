@@ -64,4 +64,10 @@ public class ChatMessageService {
 
     }
 
+    public List<ChatMessage> getAllMessages() {
+        User currentUser = userService.getCurrentUser();
+
+        return chatMessageRepository.findBySenderIdOrReceiverId(currentUser.getId(), currentUser.getId());
+    }
+
 }

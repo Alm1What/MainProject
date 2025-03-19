@@ -3,6 +3,7 @@ package org.example.mainpriject.controller;
 import org.example.mainpriject.dto.ChatMessageDTO;
 import org.example.mainpriject.model.ChatMessage;
 import org.example.mainpriject.model.User;
+import org.example.mainpriject.repository.ChatMessageRepository;
 import org.example.mainpriject.repository.UserRepository;
 import org.example.mainpriject.service.ChatMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,6 +64,11 @@ public class ChatMessageController {
         } catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
+    }
+
+    @GetMapping("/messages")
+    public List<ChatMessage> getChatMessages() {
+        return chatMessageService.getAllMessages();
     }
 
 

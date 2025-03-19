@@ -12,4 +12,6 @@ public interface ChatMessageRepository extends MongoRepository<ChatMessage, Stri
     // Пошук повідомлень, де поточний користувач є відправником або отримувачем
     @Query("{ $and: [ { $or: [ { senderId: ?1 }, { receiverId: ?1 } ] }, { content: { $regex: ?0, $options: 'i' } } ] }")
     List<ChatMessage> findByContentAndUser(String content, Long userId);
+
+    List<ChatMessage> findBySenderIdOrReceiverId(Long senderId, Long receiverId);
 }

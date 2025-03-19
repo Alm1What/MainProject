@@ -24,6 +24,11 @@ public class UserController {
         return ResponseEntity.ok(userService.getCurrentUserDto());
     }
 
+    @GetMapping("/id")
+    public ResponseEntity<?> myId() {
+        return ResponseEntity.ok(userService.getCurrentUser().getId());
+    }
+
     @PostMapping("/{userId}/change-password")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_USER')")
     public ResponseEntity<?> changePassword(
