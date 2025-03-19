@@ -6,6 +6,7 @@ import org.example.mainpriject.model.User;
 import org.example.mainpriject.repository.UserRepository;
 import org.example.mainpriject.service.ChatMessageService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -52,6 +53,16 @@ public class ChatMessageController {
                     );
                 })
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<?> searchChatMessages(@RequestParam String query) {
+        try {
+            List<ChatMessage> messages = chatMessageService.getMessagesByContent(query);
+            return ResponseEntity.ok(messages);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
     }
 
 

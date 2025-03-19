@@ -1,5 +1,7 @@
 package org.example.mainpriject.service;
 
+import org.example.mainpriject.exception.AccessDeniedException;
+import org.example.mainpriject.exception.ResourceNotFoundException;
 import org.example.mainpriject.model.ChatMessage;
 import org.example.mainpriject.model.User;
 import org.example.mainpriject.repository.ChatMessageRepository;
@@ -19,6 +21,9 @@ public class ChatMessageService {
     @Autowired
     private UserRepository userRepository;
 
+    @Autowired
+    private UserService userService;
+
     public ChatMessage sendMessage(Long senderId, Long receiverId, String content) {
 
         User sender = userRepository.findById(senderId)
@@ -37,8 +42,26 @@ public class ChatMessageService {
     }
 
     public List<ChatMessage> getChatHistory(Long senderId, Long receiverId) {
+        User currentUser = userService.getCurrentUser();
+
+        if (!currentUser.getId().equals(senderId) && !currentUser.getId().equals(receiverId)) {
+            throw new AccessDeniedException("Ви не маєте доступу до цього чату");
+        }
+
         return chatMessageRepository.findBySenderIdAndReceiverId(senderId, receiverId);
     }
 
+
+    public List<ChatMessage> getMessagesByContent(String query) {
+
+        if (query == null || query.isEmpty()) {
+            throw new IllegalArgumentException("Поле пошуку не може бути пустим");
+        }
+
+        User currentUser = userService.getCurrentUser();
+
+        return chatMessageRepository.findByContentAndUser(query, currentUser.getId());
+
+    }
 
 }
