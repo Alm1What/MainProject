@@ -36,6 +36,7 @@ public class SecurityConfig {
                                 .requestMatchers("/api/tasks/**").authenticated()
                                 .requestMatchers("/api/user/**").authenticated()
                                 .requestMatchers("/api/chat/**").authenticated()
+                                .requestMatchers("/api/group/**").authenticated()
                                 .anyRequest().authenticated()
                 );
 
