@@ -2,13 +2,11 @@ package org.example.mainpriject.controller;
 
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 
 
 @RestController
-@RequestMapping("/api/group")
-public class GroupChatController {
-
+@RequestMapping("/api/requests")
+public class GroupChatRequestController {
 
 
 }

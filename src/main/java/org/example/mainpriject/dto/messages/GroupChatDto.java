@@ -1,69 +1,30 @@
-package org.example.mainpriject.model;
+package org.example.mainpriject.dto.messages;
 
-
-/*
-4. Групові чати
-Ідея: Дозвольте користувачам створювати групові чати.
-
-Реалізація:
-
-Додайте сутність GroupChat з полями name, creatorId, participants (список userId).
-
-Змініть ChatMessage, щоб воно могло належати як до групового, так і до приватного чату.
-Додати також поле чи приватний чат чи ні (зробити так щоб користувач міг вводити пошук чатів якщо вони не приватні)
-І подавати заявку на приєднання туди а користувач який створив цю групу міг одобрити або відхилити заявку користувача
-*/
-
-/*
-Для такого функціоналу краще розділити на два класи:
-
-GroupChat: Для загальної інформації про групу (назва, опис, тип чату — публічний/приватний).
-
-GroupChatRequest: Для заявок на вступ до приватних чатів (заявка містить userId, groupId, статус заявки).
-*/
-
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.TextIndexed;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.example.mainpriject.model.GroupChat;
 
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.List;
 
-@Document(collection = "group_chat")
-public class GroupChat {
+public class GroupChatDto {
 
-    @Id
     private String id;
     private Long groupId;
     private String name;
     private Long creatorId;
+    private String creatorName;
     private List<Long> participants;
     private List<Long> administrators;
     private Instant createdAt;
     private String description;
     private boolean isPrivate;
-    private GroupType type;
+    private GroupChat.GroupType type;
     private String avatarUrl;
-    private boolean isActive;
+    private int participantCount;
     private int messageCount;
     private String lastMessagePreview;
     private Instant lastActivityTimestamp;
 
-
-    public enum GroupType {
-        CHAT, CHANNEL
-    }
-
-
-    public GroupChat() {
-        this.participants = new ArrayList<>();
-        this.administrators = new ArrayList<>();
-        this.createdAt = Instant.now();
-        this.isActive = true;
-        this.messageCount = 0;
-        this.lastActivityTimestamp = Instant.now();
-        this.type = GroupType.CHAT;
+    public GroupChatDto() {
     }
 
     public String getId() {
@@ -96,6 +57,14 @@ public class GroupChat {
 
     public void setCreatorId(Long creatorId) {
         this.creatorId = creatorId;
+    }
+
+    public String getCreatorName() {
+        return creatorName;
+    }
+
+    public void setCreatorName(String creatorName) {
+        this.creatorName = creatorName;
     }
 
     public List<Long> getParticipants() {
@@ -138,11 +107,11 @@ public class GroupChat {
         isPrivate = aPrivate;
     }
 
-    public GroupType getType() {
+    public GroupChat.GroupType getType() {
         return type;
     }
 
-    public void setType(GroupType type) {
+    public void setType(GroupChat.GroupType type) {
         this.type = type;
     }
 
@@ -154,12 +123,12 @@ public class GroupChat {
         this.avatarUrl = avatarUrl;
     }
 
-    public boolean isActive() {
-        return isActive;
+    public int getParticipantCount() {
+        return participantCount;
     }
 
-    public void setActive(boolean active) {
-        isActive = active;
+    public void setParticipantCount(int participantCount) {
+        this.participantCount = participantCount;
     }
 
     public int getMessageCount() {
