@@ -53,7 +53,7 @@ public class GroupChatService {
             participants.addAll(groupChatDto.getInitialParticipantIds());
         }
 
-        // Перевіряємо, чи творець вже в списку учасників, якщо ні - додаємо
+        // Перевіряємо, чи автор вже в списку учасників, якщо ні - додаємо
         if (!participants.contains(creatorId)) {
             participants.add(creatorId);
         }
