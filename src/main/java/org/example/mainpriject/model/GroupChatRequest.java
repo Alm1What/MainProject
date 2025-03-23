@@ -1,5 +1,6 @@
 package org.example.mainpriject.model;
 
+import org.example.mainpriject.enum_model.RequestStatus;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -13,9 +14,6 @@ public class GroupChatRequest {
     private Long creatorId;
     private RequestStatus status;
 
-    public enum RequestStatus {
-        PENDING, APPROVED, REJECTED
-    }
 
     public GroupChatRequest() {
     }

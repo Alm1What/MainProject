@@ -1,6 +1,6 @@
 package org.example.mainpriject.dto.messages;
 
-import org.example.mainpriject.model.GroupChatRequest;
+import org.example.mainpriject.enum_model.RequestStatus;
 
 import java.time.Instant;
 
@@ -13,7 +13,7 @@ public class GroupChatRequestDto {
     private String userName;
     private Long creatorId;
     private String creatorName;
-    private GroupChatRequest.RequestStatus status;
+    private RequestStatus status;
     private Instant createdAt;
 
 
@@ -21,7 +21,7 @@ public class GroupChatRequestDto {
 
     }
 
-    public GroupChatRequestDto(String id, Long groupId, String groupName, Long userId, String userName, Long creatorId, String creatorName, GroupChatRequest.RequestStatus status, Instant createdAt) {
+    public GroupChatRequestDto(String id, Long groupId, String groupName, Long userId, String userName, Long creatorId, String creatorName, RequestStatus status, Instant createdAt) {
         this.id = id;
         this.groupId = groupId;
         this.groupName = groupName;
@@ -89,11 +89,11 @@ public class GroupChatRequestDto {
         this.creatorName = creatorName;
     }
 
-    public GroupChatRequest.RequestStatus getStatus() {
+    public RequestStatus getStatus() {
         return status;
     }
 
-    public void setStatus(GroupChatRequest.RequestStatus status) {
+    public void setStatus(RequestStatus status) {
         this.status = status;
     }
 

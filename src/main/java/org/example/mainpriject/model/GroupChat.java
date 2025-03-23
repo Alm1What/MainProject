@@ -22,6 +22,7 @@ GroupChat: Для загальної інформації про групу (н�
 GroupChatRequest: Для заявок на вступ до приватних чатів (заявка містить userId, groupId, статус заявки).
 */
 
+import org.example.mainpriject.enum_model.GroupType;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.TextIndexed;
 import org.springframework.data.mongodb.core.mapping.Document;
@@ -33,6 +34,7 @@ import java.util.List;
 @Document(collection = "group_chat")
 public class GroupChat {
 
+    public static final String SEQUENCE_NAME = "group_id_generator";
     @Id
     private String id;
     private Long groupId;
@@ -51,19 +53,30 @@ public class GroupChat {
     private Instant lastActivityTimestamp;
 
 
-    public enum GroupType {
-        CHAT, CHANNEL
+    public GroupChat(String id, Long groupId, String name, Long creatorId, List<Long> participants, List<Long> administrators, Instant createdAt, String description, boolean isPrivate, GroupType type, String avatarUrl, boolean isActive, int messageCount, String lastMessagePreview, Instant lastActivityTimestamp) {
+        this.id = id;
+        this.groupId = groupId;
+        this.name = name;
+        this.creatorId = creatorId;
+        this.participants = participants;
+        this.administrators = administrators;
+        this.createdAt = createdAt;
+        this.description = description;
+        this.isPrivate = isPrivate;
+        this.type = type;
+        this.avatarUrl = avatarUrl;
+        this.isActive = isActive;
+        this.messageCount = messageCount;
+        this.lastMessagePreview = lastMessagePreview;
+        this.lastActivityTimestamp = lastActivityTimestamp;
     }
 
+    public GroupType getType() {
+        return type;
+    }
 
-    public GroupChat() {
-        this.participants = new ArrayList<>();
-        this.administrators = new ArrayList<>();
-        this.createdAt = Instant.now();
-        this.isActive = true;
-        this.messageCount = 0;
-        this.lastActivityTimestamp = Instant.now();
-        this.type = GroupType.CHAT;
+    public void setType(GroupType type) {
+        this.type = type;
     }
 
     public String getId() {
@@ -138,13 +151,7 @@ public class GroupChat {
         isPrivate = aPrivate;
     }
 
-    public GroupType getType() {
-        return type;
-    }
 
-    public void setType(GroupType type) {
-        this.type = type;
-    }
 
     public String getAvatarUrl() {
         return avatarUrl;

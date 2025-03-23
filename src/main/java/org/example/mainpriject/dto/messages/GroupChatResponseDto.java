@@ -1,11 +1,12 @@
 package org.example.mainpriject.dto.messages;
 
+import org.example.mainpriject.enum_model.GroupType;
 import org.example.mainpriject.model.GroupChat;
 
 import java.time.Instant;
 import java.util.List;
 
-public class GroupChatDto {
+public class GroupChatResponseDto {
 
     private String id;
     private Long groupId;
@@ -17,14 +18,33 @@ public class GroupChatDto {
     private Instant createdAt;
     private String description;
     private boolean isPrivate;
-    private GroupChat.GroupType type;
+    private GroupType type;
     private String avatarUrl;
     private int participantCount;
     private int messageCount;
     private String lastMessagePreview;
     private Instant lastActivityTimestamp;
 
-    public GroupChatDto() {
+    public GroupChatResponseDto() {
+    }
+
+    public GroupChatResponseDto(String id, Long groupId, String name, Long creatorId, String creatorName, List<Long> participants, List<Long> administrators, Instant createdAt, String description, boolean isPrivate, String avatarUrl, int participantCount, int messageCount, String lastMessagePreview, Instant lastActivityTimestamp, GroupType type) {
+        this.id = id;
+        this.groupId = groupId;
+        this.name = name;
+        this.creatorId = creatorId;
+        this.creatorName = creatorName;
+        this.participants = participants;
+        this.administrators = administrators;
+        this.createdAt = createdAt;
+        this.description = description;
+        this.isPrivate = isPrivate;
+        this.avatarUrl = avatarUrl;
+        this.participantCount = participantCount;
+        this.messageCount = messageCount;
+        this.lastMessagePreview = lastMessagePreview;
+        this.lastActivityTimestamp = lastActivityTimestamp;
+        this.type = type;
     }
 
     public String getId() {
@@ -107,11 +127,11 @@ public class GroupChatDto {
         isPrivate = aPrivate;
     }
 
-    public GroupChat.GroupType getType() {
+    public GroupType getType() {
         return type;
     }
 
-    public void setType(GroupChat.GroupType type) {
+    public void setType(GroupType type) {
         this.type = type;
     }
 

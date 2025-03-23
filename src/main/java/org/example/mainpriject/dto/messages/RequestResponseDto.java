@@ -1,16 +1,17 @@
 package org.example.mainpriject.dto.messages;
 
+import org.example.mainpriject.enum_model.RequestStatus;
 import org.example.mainpriject.model.GroupChatRequest;
 
 public class RequestResponseDto {
 
     private String requestId;
-    private GroupChatRequest.RequestStatus status;
+    private RequestStatus status;
 
     public RequestResponseDto() {
     }
 
-    public RequestResponseDto(String requestId, GroupChatRequest.RequestStatus status) {
+    public RequestResponseDto(String requestId, RequestStatus status) {
         this.requestId = requestId;
         this.status = status;
     }
@@ -23,11 +24,11 @@ public class RequestResponseDto {
         this.requestId = requestId;
     }
 
-    public GroupChatRequest.RequestStatus getStatus() {
+    public RequestStatus getStatus() {
         return status;
     }
 
-    public void setStatus(GroupChatRequest.RequestStatus status) {
+    public void setStatus(RequestStatus status) {
         this.status = status;
     }
 }
