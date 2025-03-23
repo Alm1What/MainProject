@@ -52,6 +52,8 @@ public class GroupChat {
     private String lastMessagePreview;
     private Instant lastActivityTimestamp;
 
+    public GroupChat() {
+    }
 
     public GroupChat(String id, Long groupId, String name, Long creatorId, List<Long> participants, List<Long> administrators, Instant createdAt, String description, boolean isPrivate, GroupType type, String avatarUrl, boolean isActive, int messageCount, String lastMessagePreview, Instant lastActivityTimestamp) {
         this.id = id;

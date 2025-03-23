@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface GroupChatRepository extends MongoRepository<GroupChat, String> {
 
     boolean existsByName(String name);
-
+    List<GroupChat> findByParticipantsContaining(Long participantId);
 }

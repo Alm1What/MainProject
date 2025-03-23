@@ -30,6 +30,13 @@ public class GroupChatController {
         return ResponseEntity.ok(groupChatService.createGroupChat(groupChatDto, creatorId));
     }
 
+    @GetMapping("/my")
+    public ResponseEntity<?> getMyGroupChats() {
+        User currentUser = userService.getCurrentUser();
+        Long userId = currentUser.getId();
+        return ResponseEntity.ok(groupChatService.getAllGroupChats(userId));
+    }
+
 
 
 

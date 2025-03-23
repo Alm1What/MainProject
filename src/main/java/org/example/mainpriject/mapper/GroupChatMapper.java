@@ -24,10 +24,10 @@ public interface GroupChatMapper {
     @Mapping(target= "type", ignore = true)
     GroupChat createGroupChatDtoToGroupChat(CreateGroupChatDto dto);
 
-    // Конвертація з сутності до DTO відповіді
+
     GroupChatResponseDto groupChatToGroupChatResponseDto(GroupChat groupChat);
 
-    // Оновлення існуючої групи з DTO
+
     void updateGroupChatFromDto(CreateGroupChatDto dto, @MappingTarget GroupChat groupChat);
 
 }

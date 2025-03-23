@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -38,6 +39,22 @@ public class GroupChatService {
         this.groupChatMapper = groupChatMapper;
         this.sequenceGeneratorService = sequenceGeneratorService;
         this.userService = userService;
+    }
+
+    public List<GroupChatResponseDto> getAllGroupChats(Long userId) {
+        User user = userService.getCurrentUser();
+        if (user.getId() != userId) {
+            throw new RuntimeException("User not logged in");
+        }
+
+        List<GroupChat> userGroup = groupChatRepository.findByParticipantsContaining(userId);
+
+        return userGroup.stream()
+                .map(groupChatMapper::groupChatToGroupChatResponseDto)
+                .collect(Collectors.toList());
+
+
+
     }
 
     public GroupChatResponseDto createGroupChat(CreateGroupChatDto groupChatDto, Long creatorId) {
