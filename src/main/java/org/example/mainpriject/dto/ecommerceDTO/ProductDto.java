@@ -1,16 +1,12 @@
-package org.example.mainpriject.model;
+package org.example.mainpriject.dto.ecommerceDTO;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.DBRef;
-import org.springframework.data.mongodb.core.mapping.Document;
+import org.example.mainpriject.model.User;
 
 import java.time.LocalDate;
-import java.util.Date;
 import java.util.List;
 
-@Document(collection = "product")
-public class Product {
-    @Id
+public class ProductDto {
+
     private String id;
     private String name;
     private String description;
@@ -18,13 +14,12 @@ public class Product {
     private int stockQuantity;
     private List<String> imageUrls;
     private LocalDate createdAt;
-    private String userNameCreated;
 
 
-    public Product() {
+    public ProductDto() {
     }
 
-    public Product(String id, String name, String description, double price, int stockQuantity, List<String> imageUrls, LocalDate createdAt) {
+    public ProductDto(String id, String name, String description, double price, int stockQuantity, List<String> imageUrls, LocalDate createdAt, String ownerName, User owner) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -32,6 +27,8 @@ public class Product {
         this.stockQuantity = stockQuantity;
         this.imageUrls = imageUrls;
         this.createdAt = createdAt;
+        OwnerName = ownerName;
+        this.owner = this.owner;
     }
 
     public String getId() {
@@ -90,5 +87,19 @@ public class Product {
         this.createdAt = createdAt;
     }
 
+    public String getOwnerName() {
+        return OwnerName;
+    }
 
+    public void setOwnerName(String ownerName) {
+        OwnerName = ownerName;
+    }
+
+    public User getOwner() {
+        return owner;
+    }
+
+    public void setOwner(User owner) {
+        this.owner = owner;
+    }
 }

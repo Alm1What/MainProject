@@ -1,6 +1,15 @@
-version: "3.8"
-
 services:
+  mongo:
+    image: mongo:latest
+    container_name: mongo
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - my_network
+
   postgres:
     image: postgres:15
     container_name: my_postgres
@@ -22,10 +31,12 @@ services:
     container_name: my_app
     depends_on:
       - postgres
+      - mongo
     environment:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/mydb
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
+      SPRING_DATA_MONGODB_URI: mongodb://mongo:27017/task_manager_chat  # MongoDB URI
     ports:
       - "8080:8080"
     networks:
@@ -36,3 +47,4 @@ networks:
 
 volumes:
   postgres_data:
+  mongodb_data:
