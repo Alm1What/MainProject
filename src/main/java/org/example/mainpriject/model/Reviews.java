@@ -5,7 +5,7 @@ import jakarta.validation.constraints.Min;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Document(collection = "reviews")
 public class Reviews {
@@ -19,12 +19,12 @@ public class Reviews {
     @Min(0)
     @Max(5)
     private int rating;
-    private LocalDate reviews_date;
+    private LocalDateTime reviews_date;
 
     public Reviews() {
     }
 
-    public Reviews(String id, String reviewerName, String reviews_content, int rating, LocalDate reviews_date) {
+    public Reviews(String id, String reviewerName, String reviews_content, int rating, LocalDateTime reviews_date) {
         this.id = id;
         this.reviewerName = reviewerName;
         this.reviews_content = reviews_content;
@@ -64,11 +64,11 @@ public class Reviews {
         this.rating = rating;
     }
 
-    public LocalDate getReviews_date() {
+    public LocalDateTime getReviews_date() {
         return reviews_date;
     }
 
-    public void setReviews_date(LocalDate reviews_date) {
+    public void setReviews_date(LocalDateTime reviews_date) {
         this.reviews_date = reviews_date;
     }
 }

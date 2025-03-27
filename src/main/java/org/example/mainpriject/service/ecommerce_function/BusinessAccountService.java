@@ -1,18 +1,14 @@
 package org.example.mainpriject.service.ecommerce_function;
 
-import jakarta.persistence.SequenceGenerator;
 import org.example.mainpriject.dto.ecommerceDTO.BusinessAccountDto;
 import org.example.mainpriject.mapper.ecommerce.BusinessAccountMapper;
 import org.example.mainpriject.model.BusinessAccount;
-import org.example.mainpriject.model.DatabaseSequence;
 import org.example.mainpriject.model.User;
 import org.example.mainpriject.repository.BusinessAccountRepository;
 import org.example.mainpriject.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.mongodb.core.query.Update;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -44,10 +40,7 @@ public class BusinessAccountService {
             throw new RuntimeException("Business account with name of company already exists");
         }
 
-        User currentUser = userService.getCurrentUser();
-        if (currentUser.getId() != userId) {
-            throw new RuntimeException("User is not logged in");
-        }
+        checkAuthorized(userId);
 
         if (businessAccountDto.getNameOfCompany() == null ||
                 businessAccountDto.getNameOfCompany().isEmpty()) {
@@ -88,6 +81,23 @@ public class BusinessAccountService {
         }
         BusinessAccount account = businessAccountRepository.findById(id);
         return businessAccountMapper.toDto(account);
+    }
+
+    public BusinessAccountDto update(BusinessAccountDto businessAccountDto, Long userId, Long accountId) {
+        checkAuthorized(userId);
+        if (businessAccountRepository.findById(accountId) == null) {
+            throw new RuntimeException("Account with id " + accountId + " does not exist");
+        }
+
+        if (businessAccountDto.getNameOfCompany() == null ||
+                businessAccountDto.getNameOfCompany().isEmpty()) {
+            throw new RuntimeException("Name of company is required");
+        }
+
+        BusinessAccount account = businessAccountRepository.findById(accountId);
+        account.setNameOfCompany(businessAccountDto.getNameOfCompany());
+        BusinessAccount savedBusinessAccount = businessAccountRepository.save(account);
+        return businessAccountMapper.toDto(savedBusinessAccount);
     }
 
 

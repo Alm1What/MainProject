@@ -38,5 +38,10 @@ public class BusinessAccountController {
         return businessAccountService.getAccountById(accountId, userId);
     }
 
+    @PutMapping("/{userId}/{accountId}")
+    public ResponseEntity<BusinessAccountDto> update(@RequestBody BusinessAccountDto businessAccountDto, @PathVariable Long userId, @PathVariable Long accountId) {
+        return ResponseEntity.ok(businessAccountService.update(businessAccountDto, userId, accountId));
+    }
+
 
 }
