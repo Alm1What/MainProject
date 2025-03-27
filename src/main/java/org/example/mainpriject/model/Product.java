@@ -24,7 +24,7 @@ public class Product {
     public Product() {
     }
 
-    public Product(String id, String name, String description, double price, int stockQuantity, List<String> imageUrls, LocalDate createdAt) {
+    public Product(String id, String name, String description, double price, int stockQuantity, List<String> imageUrls, LocalDate createdAt, String userNameCreated) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -32,6 +32,7 @@ public class Product {
         this.stockQuantity = stockQuantity;
         this.imageUrls = imageUrls;
         this.createdAt = createdAt;
+        this.userNameCreated = userNameCreated;
     }
 
     public String getId() {
@@ -90,5 +91,11 @@ public class Product {
         this.createdAt = createdAt;
     }
 
+    public String getUserNameCreated() {
+        return userNameCreated;
+    }
 
+    public void setUserNameCreated(String userNameCreated) {
+        this.userNameCreated = userNameCreated;
+    }
 }

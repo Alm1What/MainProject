@@ -23,9 +23,5 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping()
-    public ResponseEntity<?> addProduct(@RequestBody ProductDto productDto) {
-        ProductDto createdProduct = productService.create(productDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(createdProduct);
-    }
+
 }

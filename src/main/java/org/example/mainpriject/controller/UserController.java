@@ -41,4 +41,10 @@ public class UserController {
         userService.changePassword(userId, passwordChangeDto);
         return ResponseEntity.ok(Map.of("message", "Пароль успішно змінено"));
     }
+
+    @GetMapping("/id")
+    public Long getId() {
+        User currentUser = userService.getCurrentUser();
+        return currentUser.getId();
+    }
 }

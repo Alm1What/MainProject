@@ -14,12 +14,12 @@ public class ProductDto {
     private int stockQuantity;
     private List<String> imageUrls;
     private LocalDate createdAt;
-
+    private String userNameCreated;
 
     public ProductDto() {
     }
 
-    public ProductDto(String id, String name, String description, double price, int stockQuantity, List<String> imageUrls, LocalDate createdAt, String ownerName, User owner) {
+    public ProductDto(String id, String name, String description, double price, int stockQuantity, List<String> imageUrls, LocalDate createdAt, String userNameCreated) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -27,8 +27,7 @@ public class ProductDto {
         this.stockQuantity = stockQuantity;
         this.imageUrls = imageUrls;
         this.createdAt = createdAt;
-        OwnerName = ownerName;
-        this.owner = this.owner;
+        this.userNameCreated = userNameCreated;
     }
 
     public String getId() {
@@ -87,19 +86,11 @@ public class ProductDto {
         this.createdAt = createdAt;
     }
 
-    public String getOwnerName() {
-        return OwnerName;
+    public String getUserNameCreated() {
+        return userNameCreated;
     }
 
-    public void setOwnerName(String ownerName) {
-        OwnerName = ownerName;
-    }
-
-    public User getOwner() {
-        return owner;
-    }
-
-    public void setOwner(User owner) {
-        this.owner = owner;
+    public void setUserNameCreated(String userNameCreated) {
+        this.userNameCreated = userNameCreated;
     }
 }
