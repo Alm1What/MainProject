@@ -28,7 +28,7 @@ public class AdminController {
         this.userRepository = userRepository;
     }
 
-    // Встановлення ролі адміністратора для користувача
+
     @PostMapping("/set-admin")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public ResponseEntity<String> setAdminRole(@RequestParam String email) {
@@ -43,7 +43,6 @@ public class AdminController {
     }
 
 
-    // це не повне видалення користувача а лише зміна deleted на true (хочу спробувати реалізувати функціонал для цього "Мяке видалення").
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     public void deleteUser(@PathVariable Long id) {

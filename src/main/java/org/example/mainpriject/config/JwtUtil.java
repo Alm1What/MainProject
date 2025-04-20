@@ -12,7 +12,7 @@ import java.util.Date;
 @Component
 public class JwtUtil {
 
-    // Генеруємо безпечний секретний ключ (512 біт)
+
     private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 
     private final long jwtExpirationMs = 86400000;

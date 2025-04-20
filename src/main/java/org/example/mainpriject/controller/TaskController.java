@@ -62,7 +62,6 @@ public class TaskController {
         return ResponseEntity.noContent().build();
     }
 
-    // Отримання всіх завдань (тільки для адміністратора)
     @GetMapping("/all")
     public ResponseEntity<List<TaskDto>> getAllTasks(
             @RequestParam(defaultValue = "0") int page,

@@ -2,6 +2,7 @@ package org.example.mainpriject.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -28,13 +29,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(csrf -> csrf.disable())
-                .sessionManagement(session ->
-                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth ->
-                        auth.requestMatchers("/api/auth/**").permitAll()
-                                .requestMatchers("/api/admin/**").hasRole("ADMIN")
-                                .requestMatchers("/api/tasks/**").authenticated()
-                                .requestMatchers("/api/user/**").authenticated()
+                        auth
+                                .requestMatchers("/api/auth/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/articles/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/categories/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/comments/**").permitAll()
+                                .requestMatchers("/api/categories/**").hasRole("ADMIN")
                                 .anyRequest().authenticated()
                 );
 
